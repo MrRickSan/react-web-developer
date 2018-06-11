@@ -1,47 +1,94 @@
-console.log('App.js is running!')
-
-const app = {
-    title: 'Indecision App',
-    subtitle: 'Put your life in the hands of a computer',
-    options: ['One', 'Two']
+class IndecisionApp extends React.Component {
+  render () {
+    const title = 'Indecision'
+    const subtitle = 'Put your life in the hands of a computer'
+    const options = ['Thing one', 'Thing two', 'Thing four']
+    return (
+      <div>
+        <Header title={title} subtitle={subtitle} />
+        <Action />
+        <Options options={options} />
+        <AddOption />
+      </div>
+    )
+  }
 }
 
-// JSX - JavaScript XML
-const template = (
-    <div>
-        <h1>{app.title}</h1>
-        {app.subtitle && <p>{app.subtitle}</p>}
-        {app.options.length > 0 ? 'Here are your options' : 'No options'}
-        <ol>
-            <li>Item one</li>
-            <li>Item two</li>
-        </ol>
-    </div>
-)
-// babel .\src\app.js --out-file=public\scripts\app.js --presets=env,react --watch
-
-const user = {
-    name: 'Ricardo',
-    age: 30,
-    location: 'Recife/PE'
+class Header extends React.Component {
+  render () {
+    return (
+      <div>
+        <h1>{this.props.title}</h1>
+        <h2>{this.props.subtitle}</h2>
+      </div>
+    )
+  }
 }
-function getLocation (location) {
-    if (location) {
-        return <p>Location: {location}</p>
+
+class Action extends React.Component {
+  handlePick () {
+    alert('handlePick')
+  }
+  render () {
+    return (
+      <div>
+        <button onClick={this.handlePick}>What should I do?</button>
+      </div>
+    )
+  }
+}
+
+class Options extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleRemoveAll = this.handleRemoveAll.bind(this)
+  }
+
+  handleRemoveAll () {
+    alert(this.props.options)
+  }
+
+  render () {
+    return (
+      <div>
+        <button onClick={this.handleRemoveAll}>Remove All</button>
+        {
+          this.props.options.map((option) => <Option key={option} optionText={option} />)
+        }
+      </div>
+    )
+  }
+}
+
+class Option extends React.Component {
+  render () {
+    return (
+      <div>
+        {this.props.optionText}
+      </div>
+    )
+  }
+}
+
+class AddOption extends React.Component {
+  handleAddOption (event) {
+    event.preventDefault()
+    const option = event.target.elements.option.value.trim()
+
+    if (option) {
+      alert(option)
     }
+  }
+  render () {
+    return (
+      <div>
+        <form onSubmit={this.handleAddOption}>
+          <input type='text' name='option' />
+          <button>Add Option</button>
+        </form>
+      </div>
+    )
+  }
 }
 
-// if statements (into functions)
-// ternary operation = true ? 'True' : 'False'
-// logical and(&&) operator
-const templateTwo = (
-    <div>
-        <h1>{user.name ? user.name : 'Anonymous'}</h1>
-        {(user.age && user.age >= 18) && <p>Age: {user.age}</p>}
-        {getLocation(user.location)}
-    </div>
-)
-
-const appRoot = document.getElementById('app')
-
-ReactDOM.render(template, appRoot)
+ReactDOM.render(<IndecisionApp />, document.getElementById('app'))
